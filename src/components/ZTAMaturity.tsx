@@ -18,7 +18,10 @@ import {
   ClipboardList,
   Save,
   X,
-  PieChart
+  PieChart,
+  FileDown,
+  FileSpreadsheet,
+  AlertTriangle
 } from 'lucide-react';
 import {
   RadarChart,
@@ -40,9 +43,13 @@ import {
   ZTMMFunction,
   AssessmentQuestion
 } from '../lib/ztmmData';
+import { exportToPDF, exportToExcel } from '../lib/exportUtils';
+import GapAnalysis from './GapAnalysis';
 
 type Props = {
   projectId: string;
+  projectName?: string;
+  clientName?: string;
 };
 
 type AssessmentAnswer = {
@@ -54,7 +61,7 @@ type AssessmentAnswer = {
   evidence: string;
 };
 
-type ViewMode = 'overview' | 'assessment' | 'results' | 'charts';
+type ViewMode = 'overview' | 'assessment' | 'results' | 'charts' | 'gaps';
 
 const pillarIcons: Record<string, React.ReactNode> = {
   User: <User className="w-5 h-5" />,
@@ -76,8 +83,9 @@ const CHART_COLORS = {
   optimal: '#22c55e',
 };
 
-export default function ZTAMaturity({ projectId }: Props) {
+export default function ZTAMaturity({ projectId, projectName = 'Assessment', clientName = 'Client' }: Props) {
   const [viewMode, setViewMode] = useState<ViewMode>('overview');
+  const [exporting, setExporting] = useState(false);
   const [expandedPillars, setExpandedPillars] = useState<Set<string>>(new Set());
   const [expandedFunctions, setExpandedFunctions] = useState<Set<string>>(new Set());
   const [answers, setAnswers] = useState<Record<string, AssessmentAnswer>>({});
@@ -254,28 +262,93 @@ export default function ZTAMaturity({ projectId }: Props) {
     return <div className="text-slate-600">Loading ZTMM assessment...</div>;
   }
 
+  // Export handlers
+  const handleExportPDF = async () => {
+    setExporting(true);
+    try {
+      const pillarScores: Record<string, number> = {};
+      ztmmPillars.forEach(pillar => {
+        pillarScores[pillar.id] = getPillarScore(pillar.id);
+      });
+      
+      exportToPDF({
+        projectName,
+        clientName,
+        assessmentDate: new Date().toISOString().split('T')[0],
+        answers,
+        overallScore: getOverallScore(),
+        pillarScores,
+      });
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const handleExportExcel = async () => {
+    setExporting(true);
+    try {
+      const pillarScores: Record<string, number> = {};
+      ztmmPillars.forEach(pillar => {
+        pillarScores[pillar.id] = getPillarScore(pillar.id);
+      });
+      
+      exportToExcel({
+        projectName,
+        clientName,
+        assessmentDate: new Date().toISOString().split('T')[0],
+        answers,
+        overallScore: getOverallScore(),
+        pillarScores,
+      });
+    } catch (error) {
+      console.error('Error exporting Excel:', error);
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h3 className="text-lg font-semibold text-slate-900">CISA Zero Trust Maturity Model Assessment</h3>
           <p className="text-sm text-slate-600">Comprehensive assessment based on CISA ZTMM v2.0</p>
         </div>
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={handleExportPDF}
+            disabled={exporting}
+            className="flex items-center space-x-2 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 text-sm"
+            title="Export to PDF"
+          >
+            <FileDown className="w-4 h-4" />
+            <span className="hidden sm:inline">PDF</span>
+          </button>
+          <button
+            onClick={handleExportExcel}
+            disabled={exporting}
+            className="flex items-center space-x-2 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 text-sm"
+            title="Export to Excel"
+          >
+            <FileSpreadsheet className="w-4 h-4" />
+            <span className="hidden sm:inline">Excel</span>
+          </button>
           <button
             onClick={saveAnswers}
             disabled={saving}
             className="flex items-center space-x-2 px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-800 disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
-            <span>{saving ? 'Saving...' : 'Save Progress'}</span>
+            <span>{saving ? 'Saving...' : 'Save'}</span>
           </button>
         </div>
       </div>
 
       {/* View Mode Tabs */}
-      <div className="flex space-x-1 bg-slate-100 p-1 rounded-lg w-fit">
+      <div className="flex flex-wrap gap-1 bg-slate-100 p-1 rounded-lg w-fit">
         <button
           onClick={() => setViewMode('overview')}
           className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
@@ -296,6 +369,17 @@ export default function ZTAMaturity({ projectId }: Props) {
           <div className="flex items-center space-x-2">
             <ClipboardList className="w-4 h-4" />
             <span>Assessment</span>
+          </div>
+        </button>
+        <button
+          onClick={() => setViewMode('gaps')}
+          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+            viewMode === 'gaps' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+          }`}
+        >
+          <div className="flex items-center space-x-2">
+            <AlertTriangle className="w-4 h-4" />
+            <span>Gap Analysis</span>
           </div>
         </button>
         <button
@@ -945,6 +1029,11 @@ export default function ZTAMaturity({ projectId }: Props) {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Gap Analysis View */}
+      {viewMode === 'gaps' && (
+        <GapAnalysis answers={answers} targetLevel={3} />
       )}
 
       {/* Question Assessment Modal */}

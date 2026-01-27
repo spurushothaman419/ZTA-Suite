@@ -147,7 +147,7 @@ export default function Dashboard({ isDemo = false, onExitDemo }: DashboardProps
       case 'evidence':
         return <EvidenceView projectId={selectedProject.id} />;
       case 'zta':
-        return <ZTAMaturity projectId={selectedProject.id} />;
+        return <ZTAMaturity projectId={selectedProject.id} projectName={selectedProject.name} clientName={selectedProject.client_name} />;
       case 'status':
         return <WeeklyStatus projectId={selectedProject.id} />;
       case 'roadmap':
