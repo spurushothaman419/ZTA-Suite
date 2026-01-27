@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Shield } from 'lucide-react';
+import { Shield, ArrowLeft } from 'lucide-react';
 
-export default function Auth() {
+type Props = {
+  onBack?: () => void;
+};
+
+export default function Auth({ onBack }: Props) {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -32,6 +36,15 @@ export default function Auth() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="flex items-center text-slate-400 hover:text-white mb-6 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Home
+          </button>
+        )}
         <div className="bg-white rounded-lg shadow-xl p-8">
           <div className="flex items-center justify-center mb-8">
             <Shield className="w-12 h-12 text-slate-700 mr-3" />
