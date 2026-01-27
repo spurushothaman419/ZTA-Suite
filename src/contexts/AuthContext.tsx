@@ -49,7 +49,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email: string, password: string) => {
     try {
-      const { error } = await supabase.auth.signUp({ email, password });
+      const { error } = await supabase.auth.signUp({ 
+        email, 
+        password,
+        options: {
+          emailRedirectTo: 'https://spurushothaman419.github.io/ZTA-Suite/',
+        }
+      });
       return { error };
     } catch (error) {
       return { error: error as Error };
