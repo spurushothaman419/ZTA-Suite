@@ -1,5 +1,9 @@
-import { X, Check, Lock, Mail, Shield, Zap, Building2, Star } from 'lucide-react';
+import { X, Check, Lock, Mail, Shield, Zap, Building2, Star, Phone } from 'lucide-react';
 import { useAccess, AccessTier } from '../contexts/AccessContext';
+
+// Contact Information
+const SALES_EMAIL = 'vulnsintelligencedb@protonmail.com';
+const SALES_PHONE = '+1 6699997516';
 
 type PricingTier = {
   id: AccessTier;
@@ -39,10 +43,12 @@ const pricingTiers: PricingTier[] = [
     features: [
       'Everything in Basic',
       'Full ZTMM assessment (all 8 pillars)',
-      'Export PDF/Excel reports',
-      'Unlimited projects',
-      'Roadmap planning',
-      'Gap analysis & recommendations',
+      '📊 Export PDF/Excel reports',
+      '📁 Unlimited projects',
+      '🗺️ Roadmap planning',
+      '🔍 Gap analysis & recommendations',
+      '📋 Assessment workflow templates',
+      '✅ Pre-built assessment checklists',
       'Priority email support',
     ],
   },
@@ -55,14 +61,14 @@ const pricingTiers: PricingTier[] = [
     icon: <Building2 className="w-6 h-6" />,
     features: [
       'Everything in Professional',
-      'Evidence management',
-      'Stakeholder tracking',
-      'RAID log management',
-      'Weekly status reports',
-      'Advanced analytics',
-      'SSO integration',
-      'Dedicated support',
-      'Custom training',
+      '📎 Evidence management & upload',
+      '👥 Stakeholder tracking & RACI',
+      '⚠️ RAID log management',
+      '📅 Weekly status reports',
+      '📈 Advanced analytics dashboard',
+      '🔐 SSO integration',
+      '🎯 Dedicated account manager',
+      '📚 Custom training sessions',
     ],
   },
 ];
@@ -73,7 +79,7 @@ export default function UpgradeModal() {
   if (!showUpgradeModal) return null;
 
   const handleContactSales = () => {
-    window.open('mailto:sales@zta-suite.com?subject=ZTA-Suite Enterprise Inquiry&body=I am interested in learning more about ZTA-Suite Enterprise features.', '_blank');
+    window.open(`mailto:${SALES_EMAIL}?subject=ZTA-Suite Enterprise Inquiry&body=I am interested in learning more about ZTA-Suite Enterprise features.`, '_blank');
   };
 
   const handleUpgrade = (tier: AccessTier) => {
@@ -81,7 +87,7 @@ export default function UpgradeModal() {
       handleContactSales();
     } else {
       // For professional tier, redirect to payment page or show contact form
-      window.open('mailto:sales@zta-suite.com?subject=ZTA-Suite Professional Upgrade&body=I would like to upgrade to ZTA-Suite Professional.', '_blank');
+      window.open(`mailto:${SALES_EMAIL}?subject=ZTA-Suite Professional Upgrade&body=I would like to upgrade to ZTA-Suite Professional plan.%0A%0APlease provide me with payment details and setup instructions.`, '_blank');
     }
   };
 
@@ -194,16 +200,21 @@ export default function UpgradeModal() {
             <p className="text-slate-600 mb-4">
               Contact us for custom pricing, volume discounts, or specific requirements
             </p>
-            <div className="flex items-center justify-center space-x-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
-                href="mailto:sales@zta-suite.com"
+                href={`mailto:${SALES_EMAIL}`}
                 className="inline-flex items-center px-4 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-800 transition-colors"
               >
                 <Mail className="w-4 h-4 mr-2" />
-                Contact Sales
+                {SALES_EMAIL}
               </a>
-              <span className="text-slate-500">or call</span>
-              <span className="font-semibold text-slate-700">+1 (555) 123-4567</span>
+              <a
+                href={`tel:${SALES_PHONE.replace(/\s/g, '')}`}
+                className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                <Phone className="w-4 h-4 mr-2" />
+                {SALES_PHONE}
+              </a>
             </div>
           </div>
 

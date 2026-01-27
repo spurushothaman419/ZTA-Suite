@@ -14,7 +14,13 @@ import {
   Target,
   TrendingUp,
   Award,
+  Mail,
+  Phone,
 } from 'lucide-react';
+
+// Contact Information
+const SALES_EMAIL = 'vulnsintelligencedb@protonmail.com';
+const SALES_PHONE = '+1 6699997516';
 
 type Props = {
   onSignIn: () => void;
@@ -298,7 +304,12 @@ export default function PublicLanding({ onSignIn, onTryDemo }: Props) {
               <div className="text-indigo-200 text-xs font-semibold mb-2">MOST POPULAR</div>
               <h3 className="text-lg font-semibold text-white mb-2">Professional</h3>
               <p className="text-3xl font-bold text-white mb-4">$99<span className="text-lg">/mo</span></p>
-              <p className="text-indigo-200 text-sm mb-6">Full assessment features</p>
+              <p className="text-indigo-200 text-sm mb-4">Full assessment features</p>
+              <ul className="text-left text-indigo-100 text-sm mb-6 space-y-1">
+                <li>📊 Export PDF/Excel reports</li>
+                <li>📁 Unlimited projects</li>
+                <li>🔍 Gap analysis & recommendations</li>
+              </ul>
               <button
                 onClick={onSignIn}
                 className="w-full py-2 bg-white text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors font-semibold"
@@ -311,7 +322,7 @@ export default function PublicLanding({ onSignIn, onTryDemo }: Props) {
               <p className="text-3xl font-bold text-white mb-4">Custom</p>
               <p className="text-slate-400 text-sm mb-6">Advanced features & support</p>
               <a
-                href="mailto:sales@zta-suite.com"
+                href={`mailto:${SALES_EMAIL}`}
                 className="block w-full py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-colors text-center"
               >
                 Contact Sales
@@ -364,7 +375,7 @@ export default function PublicLanding({ onSignIn, onTryDemo }: Props) {
           <p className="text-slate-400 mb-8">
             Start your free assessment today and get actionable insights to improve your security posture.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
             <button
               onClick={onTryDemo}
               className="w-full sm:w-auto px-8 py-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-semibold"
@@ -372,10 +383,20 @@ export default function PublicLanding({ onSignIn, onTryDemo }: Props) {
               Start Free Demo
             </button>
             <a
-              href="mailto:sales@zta-suite.com"
+              href={`mailto:${SALES_EMAIL}`}
               className="w-full sm:w-auto px-8 py-4 bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-colors font-semibold text-center"
             >
               Contact Sales
+            </a>
+          </div>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-slate-400">
+            <a href={`mailto:${SALES_EMAIL}`} className="flex items-center hover:text-white transition-colors">
+              <Mail className="w-5 h-5 mr-2" />
+              {SALES_EMAIL}
+            </a>
+            <a href={`tel:${SALES_PHONE.replace(/\s/g, '')}`} className="flex items-center hover:text-white transition-colors">
+              <Phone className="w-5 h-5 mr-2" />
+              {SALES_PHONE}
             </a>
           </div>
         </div>
@@ -388,9 +409,12 @@ export default function PublicLanding({ onSignIn, onTryDemo }: Props) {
             <Shield className="w-6 h-6 text-indigo-400" />
             <span className="text-white font-semibold">ZTA-Suite</span>
           </div>
-          <p className="text-slate-500 text-sm">
-            © 2024 ZTA-Suite. Based on CISA Zero Trust Maturity Model.
-          </p>
+          <div className="flex flex-col md:flex-row items-center gap-4 text-slate-500 text-sm">
+            <p>© 2026 ZTA-Suite. Based on CISA Zero Trust Maturity Model.</p>
+            <a href={`mailto:${SALES_EMAIL}`} className="hover:text-white transition-colors">
+              {SALES_EMAIL}
+            </a>
+          </div>
         </div>
       </footer>
     </div>
