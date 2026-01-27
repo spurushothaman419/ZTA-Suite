@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
 import { X } from 'lucide-react';
 
 type Props = {
@@ -8,6 +9,7 @@ type Props = {
 };
 
 export default function NewProjectModal({ onClose, onProjectCreated }: Props) {
+  const { user } = useAuth();
   const [name, setName] = useState('');
   const [clientName, setClientName] = useState('');
   const [startDate, setStartDate] = useState('');
@@ -29,6 +31,7 @@ export default function NewProjectModal({ onClose, onProjectCreated }: Props) {
           start_date: startDate,
           end_date: endDate,
           status: 'active',
+          created_by: user?.id,
         })
         .select()
         .single();
