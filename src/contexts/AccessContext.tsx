@@ -28,6 +28,15 @@ export type FeatureKey =
   | 'all_pillars'
   | 'advanced_analytics';
 
+// ============================================
+// ADMIN USERS - Full access to all features
+// Add your email addresses here
+// ============================================
+const ADMIN_EMAILS = [
+  'spurushothaman419@gmail.com',
+  // Add more admin emails as needed
+];
+
 // Define which features are available at each tier
 const featureAccess: Record<AccessTier, FeatureKey[]> = {
   public: [
@@ -72,11 +81,18 @@ export function AccessProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (user) {
-      // Check user's subscription tier from metadata or database
-      // For now, authenticated users get 'basic' tier
-      // In production, this would check Stripe subscription or database
-      const userTier = (user.user_metadata?.access_tier as AccessTier) || 'basic';
-      setAccessTier(userTier);
+      // Check if user is an admin (owner) - gets enterprise access
+      const isAdmin = ADMIN_EMAILS.includes(user.email?.toLowerCase() || '');
+      
+      if (isAdmin) {
+        setAccessTier('enterprise');
+      } else {
+        // Check user's subscription tier from metadata or database
+        // For now, authenticated users get 'basic' tier
+        // In production, this would check Stripe subscription or database
+        const userTier = (user.user_metadata?.access_tier as AccessTier) || 'basic';
+        setAccessTier(userTier);
+      }
     } else {
       setAccessTier('public');
     }
