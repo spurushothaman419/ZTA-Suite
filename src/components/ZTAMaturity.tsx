@@ -17,8 +17,19 @@ import {
   BarChart3,
   ClipboardList,
   Save,
-  X
+  X,
+  PieChart
 } from 'lucide-react';
+import {
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
+  Legend,
+  ResponsiveContainer,
+  Tooltip
+} from 'recharts';
 import { 
   ztmmPillars, 
   MaturityLevel, 
@@ -43,7 +54,7 @@ type AssessmentAnswer = {
   evidence: string;
 };
 
-type ViewMode = 'overview' | 'assessment' | 'results';
+type ViewMode = 'overview' | 'assessment' | 'results' | 'charts';
 
 const pillarIcons: Record<string, React.ReactNode> = {
   User: <User className="w-5 h-5" />,
@@ -54,6 +65,15 @@ const pillarIcons: Record<string, React.ReactNode> = {
   Eye: <Eye className="w-5 h-5" />,
   Cog: <Cog className="w-5 h-5" />,
   Scale: <Scale className="w-5 h-5" />,
+};
+
+const CHART_COLORS = {
+  current: '#3b82f6',
+  target: '#22c55e',
+  traditional: '#ef4444',
+  initial: '#f59e0b',
+  advanced: '#3b82f6',
+  optimal: '#22c55e',
 };
 
 export default function ZTAMaturity({ projectId }: Props) {
@@ -287,6 +307,17 @@ export default function ZTAMaturity({ projectId }: Props) {
           <div className="flex items-center space-x-2">
             <CheckCircle2 className="w-4 h-4" />
             <span>Results</span>
+          </div>
+        </button>
+        <button
+          onClick={() => setViewMode('charts')}
+          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+            viewMode === 'charts' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+          }`}
+        >
+          <div className="flex items-center space-x-2">
+            <PieChart className="w-4 h-4" />
+            <span>Charts</span>
           </div>
         </button>
       </div>
@@ -639,6 +670,278 @@ export default function ZTAMaturity({ projectId }: Props) {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Charts View */}
+      {viewMode === 'charts' && (
+        <div className="space-y-8">
+          {/* Overall Maturity Spider Chart */}
+          <div className="bg-white border border-slate-200 rounded-lg p-6">
+            <h4 className="text-lg font-semibold text-slate-900 mb-2">Overall Zero Trust Maturity Assessment</h4>
+            <p className="text-sm text-slate-600 mb-6">Spider chart showing maturity scores across all ZTMM pillars</p>
+            <div className="h-[500px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart 
+                  data={ztmmPillars.map(pillar => ({
+                    pillar: pillar.name,
+                    current: getPillarScore(pillar.id),
+                    target: 4,
+                    fullMark: 4,
+                  }))}
+                >
+                  <PolarGrid stroke="#e2e8f0" />
+                  <PolarAngleAxis 
+                    dataKey="pillar" 
+                    tick={{ fill: '#475569', fontSize: 12 }}
+                    tickLine={false}
+                  />
+                  <PolarRadiusAxis 
+                    angle={90} 
+                    domain={[0, 4]} 
+                    tick={{ fill: '#94a3b8', fontSize: 10 }}
+                    tickCount={5}
+                    axisLine={false}
+                  />
+                  <Radar
+                    name="Target (Optimal)"
+                    dataKey="target"
+                    stroke={CHART_COLORS.target}
+                    fill={CHART_COLORS.target}
+                    fillOpacity={0.1}
+                    strokeWidth={2}
+                    strokeDasharray="5 5"
+                  />
+                  <Radar
+                    name="Current Score"
+                    dataKey="current"
+                    stroke={CHART_COLORS.current}
+                    fill={CHART_COLORS.current}
+                    fillOpacity={0.3}
+                    strokeWidth={2}
+                  />
+                  <Legend 
+                    wrapperStyle={{ paddingTop: '20px' }}
+                  />
+                  <Tooltip 
+                    formatter={(value: number) => [value.toFixed(2), '']}
+                    contentStyle={{ 
+                      backgroundColor: 'white', 
+                      border: '1px solid #e2e8f0',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                    }}
+                  />
+                </RadarChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="mt-4 flex items-center justify-center space-x-8 text-sm">
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 rounded" style={{ backgroundColor: CHART_COLORS.current, opacity: 0.5 }} />
+                <span className="text-slate-600">Current Maturity: <span className="font-semibold">{getOverallScore().toFixed(2)}</span></span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 rounded border-2 border-dashed" style={{ borderColor: CHART_COLORS.target }} />
+                <span className="text-slate-600">Target (Optimal): <span className="font-semibold">4.00</span></span>
+              </div>
+            </div>
+          </div>
+
+          {/* Individual Pillar Spider Charts */}
+          <div className="bg-white border border-slate-200 rounded-lg p-6">
+            <h4 className="text-lg font-semibold text-slate-900 mb-2">Individual Pillar Assessments</h4>
+            <p className="text-sm text-slate-600 mb-6">Detailed spider charts showing function-level maturity within each pillar</p>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {ztmmPillars.map(pillar => {
+                const pillarData = pillar.functions.map(func => ({
+                  function: func.name.length > 15 ? func.name.substring(0, 15) + '...' : func.name,
+                  fullName: func.name,
+                  current: getFunctionScore(func.id),
+                  target: 4,
+                  fullMark: 4,
+                }));
+
+                const pillarScore = getPillarScore(pillar.id);
+                const maturity = getMaturityFromScore(pillarScore);
+
+                return (
+                  <div key={pillar.id} className="border border-slate-200 rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className={`p-2 rounded-lg ${getMaturityColor(maturity)}`}>
+                          {pillarIcons[pillar.icon]}
+                        </div>
+                        <div>
+                          <h5 className="font-semibold text-slate-900">{pillar.name}</h5>
+                          <p className="text-xs text-slate-500">{pillar.functions.length} functions</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-lg font-bold text-slate-900">{pillarScore.toFixed(2)}</div>
+                        <span className={`px-2 py-0.5 text-xs rounded-full ${getMaturityColor(maturity)}`}>
+                          {maturity}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div className="h-[300px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <RadarChart data={pillarData}>
+                          <PolarGrid stroke="#e2e8f0" />
+                          <PolarAngleAxis 
+                            dataKey="function" 
+                            tick={{ fill: '#475569', fontSize: 10 }}
+                            tickLine={false}
+                          />
+                          <PolarRadiusAxis 
+                            angle={90} 
+                            domain={[0, 4]} 
+                            tick={{ fill: '#94a3b8', fontSize: 9 }}
+                            tickCount={5}
+                            axisLine={false}
+                          />
+                          <Radar
+                            name="Target"
+                            dataKey="target"
+                            stroke={CHART_COLORS.target}
+                            fill={CHART_COLORS.target}
+                            fillOpacity={0.1}
+                            strokeWidth={1}
+                            strokeDasharray="3 3"
+                          />
+                          <Radar
+                            name="Current"
+                            dataKey="current"
+                            stroke={CHART_COLORS.current}
+                            fill={CHART_COLORS.current}
+                            fillOpacity={0.3}
+                            strokeWidth={2}
+                          />
+                          <Tooltip 
+                            formatter={(value: number, name: string, props: any) => [
+                              value.toFixed(2), 
+                              props.payload.fullName
+                            ]}
+                            contentStyle={{ 
+                              backgroundColor: 'white', 
+                              border: '1px solid #e2e8f0',
+                              borderRadius: '8px',
+                              boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                              fontSize: '12px'
+                            }}
+                          />
+                        </RadarChart>
+                      </ResponsiveContainer>
+                    </div>
+
+                    {/* Function scores list */}
+                    <div className="mt-4 space-y-1">
+                      {pillar.functions.map(func => {
+                        const score = getFunctionScore(func.id);
+                        const funcMaturity = getMaturityFromScore(score);
+                        return (
+                          <div key={func.id} className="flex items-center justify-between text-xs">
+                            <span className="text-slate-600 truncate flex-1">{func.name}</span>
+                            <div className="flex items-center space-x-2 ml-2">
+                              <div className="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                <div 
+                                  className={`h-full rounded-full ${getMaturityBgColor(funcMaturity)}`}
+                                  style={{ width: `${(score / 4) * 100}%` }}
+                                />
+                              </div>
+                              <span className="text-slate-900 font-medium w-8 text-right">{score.toFixed(1)}</span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Maturity Distribution Chart */}
+          <div className="bg-white border border-slate-200 rounded-lg p-6">
+            <h4 className="text-lg font-semibold text-slate-900 mb-2">Maturity Level Distribution</h4>
+            <p className="text-sm text-slate-600 mb-6">Comparison of current vs target maturity levels across all pillars</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {(['Traditional', 'Initial', 'Advanced', 'Optimal'] as MaturityLevel[]).map(level => {
+                const pillarsAtLevel = ztmmPillars.filter(p => 
+                  getMaturityFromScore(getPillarScore(p.id)) === level
+                ).length;
+                const percentage = (pillarsAtLevel / ztmmPillars.length) * 100;
+                
+                return (
+                  <div key={level} className={`p-4 rounded-lg border ${getMaturityColor(level)}`}>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-medium">{level}</span>
+                      <span className="text-2xl font-bold">{pillarsAtLevel}</span>
+                    </div>
+                    <div className="text-sm opacity-75">
+                      {percentage.toFixed(0)}% of pillars
+                    </div>
+                    <div className="mt-2 h-2 bg-white/50 rounded-full overflow-hidden">
+                      <div 
+                        className={`h-full rounded-full ${getMaturityBgColor(level)}`}
+                        style={{ width: `${percentage}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Gap Analysis Summary */}
+          <div className="bg-white border border-slate-200 rounded-lg p-6">
+            <h4 className="text-lg font-semibold text-slate-900 mb-2">Gap Analysis Summary</h4>
+            <p className="text-sm text-slate-600 mb-6">Distance from optimal maturity level for each pillar</p>
+            
+            <div className="space-y-4">
+              {ztmmPillars.map(pillar => {
+                const score = getPillarScore(pillar.id);
+                const gap = 4 - score;
+                const maturity = getMaturityFromScore(score);
+                
+                return (
+                  <div key={pillar.id} className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-2 w-48">
+                      <div className={`p-1.5 rounded ${getMaturityColor(maturity)}`}>
+                        {pillarIcons[pillar.icon]}
+                      </div>
+                      <span className="text-sm font-medium text-slate-900 truncate">{pillar.name}</span>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-2">
+                        <div className="flex-1 h-4 bg-slate-100 rounded-full overflow-hidden relative">
+                          <div 
+                            className={`h-full rounded-full ${getMaturityBgColor(maturity)}`}
+                            style={{ width: `${(score / 4) * 100}%` }}
+                          />
+                          <div 
+                            className="absolute top-0 right-0 h-full bg-slate-300 opacity-50"
+                            style={{ width: `${(gap / 4) * 100}%` }}
+                          />
+                        </div>
+                        <div className="w-20 text-right">
+                          <span className="text-sm font-medium text-slate-900">{score.toFixed(2)}</span>
+                          <span className="text-xs text-slate-500"> / 4.0</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="w-24 text-right">
+                      <span className={`text-sm font-medium ${gap > 2 ? 'text-red-600' : gap > 1 ? 'text-yellow-600' : 'text-green-600'}`}>
+                        Gap: {gap.toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
