@@ -10,6 +10,7 @@ import {
   Database, 
   Eye, 
   Cog,
+  Scale,
   CheckCircle2,
   Circle,
   HelpCircle,
@@ -52,6 +53,7 @@ const pillarIcons: Record<string, React.ReactNode> = {
   Database: <Database className="w-5 h-5" />,
   Eye: <Eye className="w-5 h-5" />,
   Cog: <Cog className="w-5 h-5" />,
+  Scale: <Scale className="w-5 h-5" />,
 };
 
 export default function ZTAMaturity({ projectId }: Props) {
