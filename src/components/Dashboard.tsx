@@ -10,6 +10,7 @@ import EvidenceView from './EvidenceView';
 import ZTAMaturity from './ZTAMaturity';
 import WeeklyStatus from './WeeklyStatus';
 import RoadmapView from './RoadmapView';
+import AssessmentGuide from './AssessmentGuide';
 import NewProjectModal from './NewProjectModal';
 
 type Project = {
@@ -23,11 +24,12 @@ type Project = {
 
 const tabs = [
   { id: 'overview', label: 'Overview' },
+  { id: 'guide', label: '📋 Assessment Guide' },
+  { id: 'zta', label: 'ZTA Maturity' },
   { id: 'phases', label: 'Phases & Tasks' },
   { id: 'raid', label: 'RAID Log' },
   { id: 'stakeholders', label: 'Stakeholders' },
   { id: 'evidence', label: 'Evidence' },
-  { id: 'zta', label: 'ZTA Maturity' },
   { id: 'status', label: 'Weekly Status' },
   { id: 'roadmap', label: 'Roadmap' },
 ];
@@ -153,6 +155,7 @@ export default function Dashboard() {
 
               <div className="p-6">
                 {activeTab === 'overview' && <ProjectOverview project={selectedProject} />}
+                {activeTab === 'guide' && <AssessmentGuide projectId={selectedProject.id} />}
                 {activeTab === 'phases' && <PhasesView projectId={selectedProject.id} />}
                 {activeTab === 'raid' && <RAIDLog projectId={selectedProject.id} />}
                 {activeTab === 'stakeholders' && <StakeholdersView projectId={selectedProject.id} />}
