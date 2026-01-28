@@ -11,6 +11,9 @@ export interface AssessmentTask {
   priority: TaskPriority;
   estimatedMinutes: number;
   tips?: string[];
+  steps?: string[]; // Step-by-step guidance to complete the task
+  acceptanceCriteria?: string[]; // What needs to be true for the task to be considered done
+  subtasks?: { id: string; title: string }[]; // Optional finer-grain checklist
   deliverables?: string[];
   relatedPillar?: string;
 }
@@ -64,6 +67,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Ensure sponsor understands Zero Trust benefits and commitment required',
           'Document sponsor\'s expectations and success criteria',
         ],
+        steps: [
+          'Review organization chart and identify potential sponsors',
+          'Reach out with assessment overview and ask for sponsorship',
+          'Schedule a short alignment meeting to confirm expectations and resources',
+          'Document the sponsor contact and signed approval for assessment scope',
+        ],
+        acceptanceCriteria: [
+          'Sponsor has acknowledged the assessment scope and timeline',
+          'Sponsor committed resources and points of contact',
+        ],
         deliverables: ['Executive sponsor name and contact', 'Sponsor commitment confirmation'],
       },
       {
@@ -78,6 +91,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Document any systems explicitly excluded and reasons',
           'Include cloud, on-premises, and hybrid environments',
         ],
+        steps: [
+          'Schedule a scoping workshop with business and IT stakeholders',
+          'List all systems and data types in-scope and out-of-scope',
+          'Identify environment owners and SMEs for each system',
+          'Get formal approval on the scope document from the sponsor',
+        ],
+        acceptanceCriteria: [
+          'Scope document is signed-off by sponsor and key stakeholders',
+          'System inventory for in-scope assets is complete',
+        ],
         deliverables: ['Scope document', 'System inventory list', 'Exclusion list with justifications'],
       },
       {
@@ -91,6 +114,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Identify subject matter experts for each pillar',
           'Document decision-makers vs. contributors',
           'Consider external stakeholders (vendors, partners)',
+        ],
+        steps: [
+          'Run a stakeholder brainstorming session with project team',
+          'Map stakeholders to business capabilities and systems',
+          'Assign RACI roles where appropriate',
+          'Validate the list and contact information with the sponsor',
+        ],
+        acceptanceCriteria: [
+          'Stakeholder register includes names, roles, and contact details for required SMEs',
+          'RACI matrix is populated and approved by sponsor',
         ],
         deliverables: ['Stakeholder register', 'Contact list', 'RACI matrix'],
       },
@@ -190,6 +223,17 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Review privileged access management',
           'Understand federation and external identity needs',
         ],
+        steps: [
+          'Prepare interview questionnaire focusing on authentication, provisioning, and PAM',
+          'Schedule 60-90 minute sessions with identity SMEs',
+          'Record responses and map to existing identity systems',
+          'Validate answers with evidence (policy documents, configurations, screenshots)',
+        ],
+        acceptanceCriteria: [
+          'All identity SMEs interviewed',
+          'Interview notes captured and uploaded',
+          'Key identity controls documented with evidence',
+        ],
         deliverables: ['Identity interview notes', 'Current state findings'],
       },
       {
@@ -204,6 +248,17 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Discuss BYOD and mobile device policies',
           'Review endpoint protection solutions',
           'Understand device compliance enforcement',
+        ],
+        steps: [
+          'Prepare questionnaire on device inventory, EDR, MDM/UEM, and compliance',
+          'Schedule interviews with endpoint and device owners',
+          'Collect evidence: EDR console screenshots, device inventory export',
+          'Summarize findings and map gaps to device controls',
+        ],
+        acceptanceCriteria: [
+          'Endpoint inventory collected and validated',
+          'EDR/MDM coverage documented',
+          'Risks and gaps recorded with supporting evidence',
         ],
         deliverables: ['Device interview notes', 'Endpoint inventory'],
       },

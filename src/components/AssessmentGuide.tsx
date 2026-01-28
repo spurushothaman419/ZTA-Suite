@@ -227,6 +227,16 @@ export default function AssessmentGuide({ projectId }: Props) {
               <h4 className="font-medium text-blue-900">Next Task</h4>
               <p className="text-sm text-blue-700 mt-1">{nextTask.title}</p>
               <p className="text-xs text-blue-600 mt-1">{nextTask.description}</p>
+              {nextTask.steps && (
+                <div className="mt-2">
+                  <p className="text-xs text-slate-500 mb-1">How to complete this task</p>
+                  <ol className="list-decimal list-inside text-sm text-slate-700 space-y-1">
+                    {nextTask.steps.map((s, i) => (
+                      <li key={i}>{s}</li>
+                    ))}
+                  </ol>
+                </div>
+              )}
             </div>
             <button
               onClick={() => {

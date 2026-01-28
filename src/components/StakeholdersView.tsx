@@ -86,29 +86,62 @@ export default function StakeholdersView({ projectId }: Props) {
 
   const addFromTemplate = async (template: typeof stakeholderTemplates[0]) => {
     try {
+      // Try with all fields first, fall back to basic fields if RACI columns don't exist
+      const insertData: any = {
+        project_id: projectId,
+        name: '',
+        role: template.role,
+        organization: '',
+        email: '',
+        phone: '',
+        notes: template.description,
+      };
+
+      // Try to add RACI fields (may not exist in older schemas)
+      try {
+        const { data, error } = await supabase
+          .from('stakeholders')
+          .insert({
+            ...insertData,
+            category: template.category,
+            raci_responsible: template.raci.r,
+            raci_accountable: template.raci.a,
+            raci_consulted: template.raci.c,
+            raci_informed: template.raci.i,
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+        setStakeholders([...stakeholders, data]);
+        return;
+      } catch (raciError) {
+        // Fall back to basic insert without RACI fields
+        console.log('RACI columns not available, using basic insert');
+      }
+
+      // Basic insert without RACI
       const { data, error } = await supabase
         .from('stakeholders')
-        .insert({
-          project_id: projectId,
-          name: '',
-          role: template.role,
-          organization: '',
-          email: '',
-          phone: '',
-          notes: template.description,
-          category: template.category,
-          raci_responsible: template.raci.r,
-          raci_accountable: template.raci.a,
-          raci_consulted: template.raci.c,
-          raci_informed: template.raci.i,
-        })
+        .insert(insertData)
         .select()
         .single();
 
       if (error) throw error;
-      setStakeholders([...stakeholders, data]);
+      
+      // Add RACI fields locally for display
+      const stakeholderWithRaci = {
+        ...data,
+        category: template.category,
+        raci_responsible: template.raci.r,
+        raci_accountable: template.raci.a,
+        raci_consulted: template.raci.c,
+        raci_informed: template.raci.i,
+      };
+      setStakeholders([...stakeholders, stakeholderWithRaci]);
     } catch (error) {
       console.error('Error adding from template:', error);
+      alert('Error adding stakeholder. Please try again.');
     }
   };
 
