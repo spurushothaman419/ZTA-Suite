@@ -4,6 +4,8 @@ import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { ztmmPillars, getMaturityFromScore, MaturityLevel } from './ztmmData';
+import { AssessmentPhase, AssessmentTask } from './assessmentPhases';
+
 
 type AssessmentAnswer = {
   questionId: string;
@@ -503,3 +505,164 @@ const getRecommendations = (pillarId: string, score: number): string[] => {
 };
 
 export { getRecommendations };
+
+// Export phase/task instructions to PDF
+export const exportPhaseInstructionsToPDF = (projectName: string, phase: AssessmentPhase) => {
+  const doc = new jsPDF();
+  const pageWidth = doc.internal.pageSize.getWidth();
+  doc.setFontSize(18);
+  doc.text(`${phase.name} - Assessment Instructions`, pageWidth / 2, 20, { align: 'center' });
+
+  let y = 30;
+  doc.setFontSize(12);
+  doc.text('Objectives:', 20, y);
+  y += 8;
+  phase.objectives.forEach(obj => {
+    if (y > 270) { doc.addPage(); y = 20; }
+    doc.text(`• ${obj}`, 24, y);
+    y += 6;
+  });
+
+  y += 6;
+  doc.text('Tasks:', 20, y);
+  y += 8;
+  phase.tasks.forEach((task, idx) => {
+    if (y > 260) { doc.addPage(); y = 20; }
+    doc.setFontSize(11);
+    doc.setTextColor(30,41,59);
+    doc.text(`${idx + 1}. ${task.title}`, 22, y);
+    y += 6;
+    doc.setFontSize(10);
+    if (task.description) {
+      const lines = doc.splitTextToSize(task.description, pageWidth - 44);
+      doc.text(lines, 24, y);
+      y += lines.length * 6;
+    }
+    if (task.steps && task.steps.length) {
+      doc.text('Steps:', 26, y);
+      y += 6;
+      task.steps.forEach((s, i) => {
+        if (y > 260) { doc.addPage(); y = 20; }
+        const lines = doc.splitTextToSize(`${i+1}. ${s}`, pageWidth - 50);
+        doc.text(lines, 30, y);
+        y += lines.length * 6;
+      });
+    }
+    if (task.subtasks && task.subtasks.length) {
+      doc.text('Checklist:', 26, y);
+      y += 6;
+      task.subtasks.forEach(st => {
+        if (y > 260) { doc.addPage(); y = 20; }
+        doc.text(`- ${st.title}`, 30, y);
+        y += 6;
+      });
+    }
+    if (task.acceptanceCriteria && task.acceptanceCriteria.length) {
+      doc.text('Acceptance Criteria:', 26, y);
+      y += 6;
+      task.acceptanceCriteria.forEach(ac => {
+        if (y > 260) { doc.addPage(); y = 20; }
+        const lines = doc.splitTextToSize(`• ${ac}`, pageWidth - 50);
+        doc.text(lines, 30, y);
+        y += lines.length * 6;
+      });
+    }
+    y += 6;
+  });
+
+  doc.save(`Phase_Instructions_${phase.id}_${projectName.replace(/\s+/g, '_')}.pdf`);
+};
+
+export const exportTaskInstructionsToPDF = (projectName: string, phase: AssessmentPhase, task: AssessmentTask) => {
+  const doc = new jsPDF();
+  const pageWidth = doc.internal.pageSize.getWidth();
+  doc.setFontSize(18);
+  doc.text(`${task.title} - Task Instructions`, pageWidth / 2, 20, { align: 'center' });
+  let y = 30;
+  doc.setFontSize(12);
+  if (task.description) {
+    const lines = doc.splitTextToSize(task.description, pageWidth - 40);
+    doc.text(lines, 20, y);
+    y += lines.length * 6 + 6;
+  }
+  if (task.steps && task.steps.length) {
+    doc.text('Steps:', 20, y);
+    y += 8;
+    task.steps.forEach((s, i) => {
+      if (y > 260) { doc.addPage(); y = 20; }
+      const lines = doc.splitTextToSize(`${i+1}. ${s}`, pageWidth - 40);
+      doc.text(lines, 24, y);
+      y += lines.length * 6;
+    });
+  }
+  if (task.subtasks && task.subtasks.length) {
+    y += 6;
+    doc.text('Checklist:', 20, y);
+    y += 8;
+    task.subtasks.forEach(st => {
+      if (y > 260) { doc.addPage(); y = 20; }
+      doc.text(`- ${st.title}`, 24, y);
+      y += 6;
+    });
+  }
+  if (task.acceptanceCriteria && task.acceptanceCriteria.length) {
+    y += 6;
+    doc.text('Acceptance Criteria:', 20, y);
+    y += 8;
+    task.acceptanceCriteria.forEach(ac => {
+      if (y > 260) { doc.addPage(); y = 20; }
+      const lines = doc.splitTextToSize(`• ${ac}`, pageWidth - 40);
+      doc.text(lines, 24, y);
+      y += lines.length * 6;
+    });
+  }
+
+  doc.save(`Task_Instructions_${task.id}_${projectName.replace(/\s+/g, '_')}.pdf`);
+};
+
+// Export phase/task instructions to Excel
+export const exportPhaseInstructionsToExcel = (projectName: string, phase: AssessmentPhase) => {
+  const workbook = XLSX.utils.book_new();
+  const rows: any[] = [];
+  rows.push([`${phase.name} - Instructions`]);
+  rows.push([]);
+  rows.push(['Objectives']);
+  phase.objectives.forEach(o => rows.push([o]));
+  rows.push([]);
+  rows.push(['Tasks', 'Description', 'Steps', 'Checklist', 'Acceptance Criteria', 'Deliverables']);
+  phase.tasks.forEach(t => {
+    rows.push([
+      t.title,
+      t.description || '',
+      (t.steps || []).join(' | '),
+      (t.subtasks || []).map(s => s.title).join(' | '),
+      (t.acceptanceCriteria || []).join(' | '),
+      (t.deliverables || []).join(' | '),
+    ]);
+  });
+  const sheet = XLSX.utils.aoa_to_sheet(rows);
+  XLSX.utils.book_append_sheet(workbook, sheet, 'Phase_Instructions');
+  const buf = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  saveAs(new Blob([buf], { type: 'application/octet-stream' }), `Phase_Instructions_${phase.id}_${projectName.replace(/\s+/g, '_')}.xlsx`);
+};
+
+export const exportTaskInstructionsToExcel = (projectName: string, phase: AssessmentPhase, task: AssessmentTask) => {
+  const workbook = XLSX.utils.book_new();
+  const rows: any[] = [];
+  rows.push([`${task.title} - Task Instructions`]);
+  rows.push([]);
+  rows.push(['Description', task.description || '']);
+  rows.push([]);
+  rows.push(['Steps']);
+  (task.steps || []).forEach(s => rows.push([s]));
+  rows.push([]);
+  rows.push(['Checklist']);
+  (task.subtasks || []).forEach(st => rows.push([st.title]));
+  rows.push([]);
+  rows.push(['Acceptance Criteria']);
+  (task.acceptanceCriteria || []).forEach(ac => rows.push([ac]));
+  const sheet = XLSX.utils.aoa_to_sheet(rows);
+  XLSX.utils.book_append_sheet(workbook, sheet, 'Task_Instructions');
+  const buf = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  saveAs(new Blob([buf], { type: 'application/octet-stream' }), `Task_Instructions_${task.id}_${projectName.replace(/\s+/g, '_')}.xlsx`);
+};
