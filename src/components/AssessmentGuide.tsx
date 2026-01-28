@@ -47,6 +47,7 @@ export default function AssessmentGuide({ projectId }: Props) {
   const [taskProgress, setTaskProgress] = useState<TaskProgress>({});
   const [activeTask, setActiveTask] = useState<AssessmentTask | null>(null);
   const [activePhase, setActivePhase] = useState<AssessmentPhase | null>(null);
+  const [subtaskProgress, setSubtaskProgress] = useState<Record<string, string[]>>({});
 
   useEffect(() => {
     // Load saved progress from localStorage
@@ -54,11 +55,26 @@ export default function AssessmentGuide({ projectId }: Props) {
     if (saved) {
       setTaskProgress(JSON.parse(saved));
     }
+    const savedSub = localStorage.getItem(`assessment-subtasks-${projectId}`);
+    if (savedSub) setSubtaskProgress(JSON.parse(savedSub));
   }, [projectId]);
 
   const saveProgress = (newProgress: TaskProgress) => {
     setTaskProgress(newProgress);
     localStorage.setItem(`assessment-progress-${projectId}`, JSON.stringify(newProgress));
+  };
+
+  const saveSubtaskProgress = (newSub: Record<string, string[]>) => {
+    setSubtaskProgress(newSub);
+    localStorage.setItem(`assessment-subtasks-${projectId}`, JSON.stringify(newSub));
+  };
+
+  const toggleSubtask = (taskId: string, subtaskId: string) => {
+    const current = subtaskProgress[taskId] || [];
+    const exists = current.includes(subtaskId);
+    const updated = exists ? current.filter(s => s !== subtaskId) : [...current, subtaskId];
+    const newMap = { ...subtaskProgress, [taskId]: updated };
+    saveSubtaskProgress(newMap);
   };
 
   const togglePhase = (phaseId: string) => {
