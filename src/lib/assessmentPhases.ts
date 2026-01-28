@@ -139,6 +139,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Gather recent audit reports and findings',
           'Include incident response plans and procedures',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Document inventory', 'Gap list for missing documents'],
       },
       {
@@ -152,6 +162,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Group related interviews together',
           'Schedule executive briefings at key milestones',
           'Consider stakeholder availability and time zones',
+        ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
         ],
         deliverables: ['Assessment timeline', 'Interview schedule', 'Milestone calendar'],
       },
@@ -167,6 +187,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Address questions and concerns',
           'Confirm stakeholder commitments',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Kickoff presentation', 'Meeting minutes', 'Action items list'],
       },
       {
@@ -180,6 +210,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Configure this assessment tool with project details',
           'Create interview templates and questionnaires',
           'Establish secure communication channels',
+        ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
         ],
         deliverables: ['Configured assessment environment', 'Template library'],
       },
@@ -275,6 +315,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Understand DNS security and filtering',
           'Cover remote access and VPN solutions',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Network interview notes', 'Network diagrams'],
       },
       {
@@ -289,6 +339,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Discuss secure development practices (DevSecOps)',
           'Review application access controls',
           'Understand API security measures',
+        ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
         ],
         deliverables: ['Application interview notes', 'Application inventory'],
       },
@@ -305,6 +365,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Review encryption and key management',
           'Understand data access controls and monitoring',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Data security interview notes', 'Data classification overview'],
       },
       {
@@ -320,6 +390,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Review incident response procedures',
           'Understand security metrics and reporting',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['SecOps interview notes', 'Tool inventory'],
       },
       {
@@ -333,6 +413,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Analyze authentication requirements',
           'Check encryption standards',
           'Evaluate compliance requirements',
+        ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
         ],
         deliverables: ['Policy review findings', 'Gap analysis'],
       },
@@ -348,6 +438,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Document data flows and storage locations',
           'Highlight security control points',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Architecture diagrams', 'Data flow diagrams'],
       },
       {
@@ -362,6 +462,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Identify gaps and overlaps',
           'Document licensing and support status',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Security tools inventory spreadsheet'],
       },
       {
@@ -375,6 +485,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Check penetration test results',
           'Analyze vulnerability assessment reports',
           'Note remediation status of findings',
+        ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
         ],
         deliverables: ['Audit findings summary', 'Open items list'],
       },
@@ -418,6 +538,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Consider both technical and process maturity',
           'Document specific gaps and recommendations',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Identity pillar assessment', 'Evidence artifacts'],
       },
       {
@@ -432,6 +562,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Test compliance enforcement mechanisms',
           'Review EDR/XDR capabilities',
           'Check BYOD and IoT coverage',
+        ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
         ],
         deliverables: ['Devices pillar assessment', 'Evidence artifacts'],
       },
@@ -448,6 +588,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Check encryption standards compliance',
           'Assess east-west traffic controls',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Networks pillar assessment', 'Evidence artifacts'],
       },
       {
@@ -462,6 +612,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Check application-level access controls',
           'Assess DevSecOps practices',
           'Verify API security measures',
+        ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
         ],
         deliverables: ['Applications pillar assessment', 'Evidence artifacts'],
       },
@@ -478,6 +638,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Review encryption and key management',
           'Assess data access controls',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Data pillar assessment', 'Evidence artifacts'],
       },
       {
@@ -492,6 +662,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Check threat detection capabilities',
           'Assess security metrics and dashboards',
           'Verify log aggregation completeness',
+        ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
         ],
         deliverables: ['Visibility pillar assessment', 'Evidence artifacts'],
       },
@@ -508,6 +688,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Assess policy automation capabilities',
           'Verify integration between security tools',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Automation pillar assessment', 'Evidence artifacts'],
       },
       {
@@ -523,6 +713,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Assess risk management integration',
           'Verify compliance monitoring',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Governance pillar assessment', 'Evidence artifacts'],
       },
       {
@@ -537,6 +737,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Address disagreements with additional evidence',
           'Document any rating adjustments',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Validated assessment findings', 'SME sign-off'],
       },
       {
@@ -550,6 +760,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Link evidence to specific questions',
           'Include screenshots and configurations',
           'Maintain chain of custody for sensitive items',
+        ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
         ],
         deliverables: ['Evidence repository', 'Evidence index'],
       },
@@ -592,6 +812,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Compare against industry benchmarks',
           'Identify lowest-scoring areas',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Final maturity scorecard', 'Scoring methodology document'],
       },
       {
@@ -605,6 +835,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Quantify gaps in measurable terms',
           'Consider dependencies between pillars',
           'Identify cross-cutting gaps',
+        ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
         ],
         deliverables: ['Gap analysis report', 'Gap heat map'],
       },
@@ -620,6 +860,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Reference threat intelligence',
           'Align with enterprise risk framework',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Risk mapping document', 'Risk register updates'],
       },
       {
@@ -633,6 +883,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Identify unused tool capabilities',
           'Find policy enforcement gaps',
           'Consider training opportunities',
+        ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
         ],
         deliverables: ['Quick wins list', 'Implementation estimates'],
       },
@@ -648,6 +908,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Define phased approach',
           'Include technology requirements',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Target state architecture', 'Technology requirements'],
       },
       {
@@ -661,6 +931,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Consider resource constraints',
           'Account for dependencies',
           'Balance quick wins with strategic initiatives',
+        ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
         ],
         deliverables: ['Prioritized initiative list', 'Prioritization rationale'],
       },
@@ -676,6 +956,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Account for training needs',
           'Plan for ongoing operations',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Resource estimates', 'Budget projections'],
       },
       {
@@ -689,6 +979,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Identify blocking items',
           'Note external dependencies',
           'Consider organizational readiness',
+        ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
         ],
         deliverables: ['Dependency map', 'Prerequisites list'],
       },
@@ -731,6 +1031,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Include milestones and checkpoints',
           'Build in flexibility for adjustments',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Implementation roadmap', 'Phase definitions'],
       },
       {
@@ -745,6 +1055,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Include identity governance improvements',
           'Cover privileged access management',
           'Consider identity federation needs',
+        ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
         ],
         deliverables: ['Identity recommendations document'],
       },
@@ -761,6 +1081,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Cover EDR/XDR enhancements',
           'Consider BYOD and IoT strategies',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Devices recommendations document'],
       },
       {
@@ -775,6 +1105,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Include encryption improvements',
           'Cover ZTNA implementation',
           'Consider SD-WAN and SASE options',
+        ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
         ],
         deliverables: ['Networks recommendations document'],
       },
@@ -791,6 +1131,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Cover API security enhancements',
           'Consider application access controls',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Applications recommendations document'],
       },
       {
@@ -806,6 +1156,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Cover encryption enhancements',
           'Consider data access governance',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Data recommendations document'],
       },
       {
@@ -819,6 +1179,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Include leading and lagging indicators',
           'Set realistic targets',
           'Plan for metric collection',
+        ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
         ],
         deliverables: ['KPI definitions', 'Metrics dashboard design'],
       },
@@ -834,6 +1204,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Calculate ROI where possible',
           'Address operational efficiencies',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Business case document', 'ROI analysis'],
       },
       {
@@ -847,6 +1227,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Define roles and responsibilities',
           'Include testing and validation steps',
           'Add rollback procedures',
+        ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
         ],
         deliverables: ['Implementation playbooks'],
       },
@@ -889,6 +1279,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Include maturity scores visual',
           'Highlight top recommendations',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Executive summary document'],
       },
       {
@@ -902,6 +1302,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Document all pillar assessments',
           'Add evidence references',
           'Include appendices for details',
+        ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
         ],
         deliverables: ['Detailed assessment report'],
       },
@@ -917,6 +1327,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Prepare for Q&A',
           'Include clear ask/next steps',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Executive presentation deck'],
       },
       {
@@ -930,6 +1350,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Anticipate questions',
           'Have backup slides ready',
           'Document decisions and feedback',
+        ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
         ],
         deliverables: ['Meeting minutes', 'Decision log'],
       },
@@ -945,6 +1375,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Document approvals',
           'Set implementation kickoff date',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Signed approval document'],
       },
       {
@@ -958,6 +1398,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Add contact information',
           'Document assumptions and constraints',
           'Include lessons learned',
+        ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
         ],
         deliverables: ['Handoff package', 'Knowledge transfer document'],
       },
@@ -973,6 +1423,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Discuss dependencies',
           'Answer questions',
         ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
+        ],
         deliverables: ['Briefing notes', 'Q&A log'],
       },
       {
@@ -986,6 +1446,16 @@ export const assessmentPhases: AssessmentPhase[] = [
           'Define reassessment scope',
           'Identify metrics to track',
           'Set calendar reminders',
+        ],
+        steps: [
+          'Review the task description and objective',
+          'Identify owners and schedule required interviews/workshops',
+          'Collect supporting evidence (docs, screenshots, exports)',
+          'Document findings and map to maturity indicators',
+        ],
+        acceptanceCriteria: [
+          'Task activities are documented and evidence uploaded',
+          'SME has validated findings',
         ],
         deliverables: ['Reassessment schedule'],
       },
