@@ -13,6 +13,13 @@ import {
   AlertCircle,
   PlayCircle
 } from 'lucide-react';
+import { assessmentPhases } from '../lib/assessmentPhases';
+import {
+  exportPhaseInstructionsToPDF,
+  exportPhaseInstructionsToExcel,
+  exportTaskInstructionsToPDF,
+  exportTaskInstructionsToExcel,
+} from '../lib/exportUtils';
 
 type Phase = {
   id: string;
@@ -60,6 +67,9 @@ export default function PhasesView({ projectId }: Props) {
   const [deliverables, setDeliverables] = useState<Record<string, Deliverable[]>>({});
   const [expandedPhases, setExpandedPhases] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
+  const [projectName, setProjectName] = useState<string>('');
+  const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
+  const [subtaskProgress, setSubtaskProgress] = useState<Record<string, string[]>>({});
   
   // Task modal states
   const [showTaskModal, setShowTaskModal] = useState(false);
@@ -76,10 +86,16 @@ export default function PhasesView({ projectId }: Props) {
 
   useEffect(() => {
     loadData();
+    const savedSub = localStorage.getItem(`assessment-subtasks-${projectId}`);
+    if (savedSub) setSubtaskProgress(JSON.parse(savedSub));
   }, [projectId]);
 
   const loadData = async () => {
     try {
+      // Fetch project name for exports
+      const { data: projectData } = await supabase.from('projects').select('name').eq('id', projectId).single();
+      if (projectData) setProjectName(projectData.name || 'Project');
+      
       const { data: phasesData } = await supabase
         .from('phases')
         .select('*')
@@ -117,6 +133,19 @@ export default function PhasesView({ projectId }: Props) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const saveSubtaskProgress = (newMap: Record<string, string[]>) => {
+    setSubtaskProgress(newMap);
+    localStorage.setItem(`assessment-subtasks-${projectId}`, JSON.stringify(newMap));
+  };
+
+  const toggleSubtask = (taskId: string, subtaskId: string) => {
+    const current = subtaskProgress[taskId] || [];
+    const exists = current.includes(subtaskId);
+    const updated = exists ? current.filter(s => s !== subtaskId) : [...current, subtaskId];
+    const newMap = { ...subtaskProgress, [taskId]: updated };
+    saveSubtaskProgress(newMap);
   };
 
   const togglePhase = (phaseId: string) => {
@@ -379,15 +408,39 @@ export default function PhasesView({ projectId }: Props) {
                     )}
                   </div>
                 </div>
-                <select
-                  value={phase.status}
-                  onChange={(e) => updatePhaseStatus(phase.id, e.target.value)}
-                  className={`px-3 py-1 text-sm rounded-full border ${getStatusColor(phase.status)}`}
-                >
-                  <option value="not-started">Not Started</option>
-                  <option value="in-progress">In Progress</option>
-                  <option value="completed">Completed</option>
-                </select>
+                <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-1">
+                    <button
+                      onClick={() => {
+                        const staticPhase = assessmentPhases.find(p => p.number === phase.phase_number);
+                        if (staticPhase) exportPhaseInstructionsToPDF(projectName || 'Project', staticPhase);
+                      }}
+                      className="px-2 py-1 text-xs bg-white border rounded text-slate-700 hover:bg-slate-50"
+                      title="Export Phase Instructions (PDF)"
+                    >
+                      PDF
+                    </button>
+                    <button
+                      onClick={() => {
+                        const staticPhase = assessmentPhases.find(p => p.number === phase.phase_number);
+                        if (staticPhase) exportPhaseInstructionsToExcel(projectName || 'Project', staticPhase);
+                      }}
+                      className="px-2 py-1 text-xs bg-white border rounded text-slate-700 hover:bg-slate-50"
+                      title="Export Phase Instructions (Excel)"
+                    >
+                      Excel
+                    </button>
+                  </div>
+                  <select
+                    value={phase.status}
+                    onChange={(e) => updatePhaseStatus(phase.id, e.target.value)}
+                    className={`px-3 py-1 text-sm rounded-full border ${getStatusColor(phase.status)}`}
+                  >
+                    <option value="not-started">Not Started</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                  </select>
+                </div>
               </div>
             </div>
 
