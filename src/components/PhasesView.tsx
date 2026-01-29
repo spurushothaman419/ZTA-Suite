@@ -11,7 +11,8 @@ import {
   X,
   Clock,
   AlertCircle,
-  PlayCircle
+  PlayCircle,
+  Download
 } from 'lucide-react';
 import { assessmentPhases } from '../lib/assessmentPhases';
 import {
@@ -70,6 +71,7 @@ export default function PhasesView({ projectId }: Props) {
   const [projectName, setProjectName] = useState<string>('');
   const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
   const [subtaskProgress, setSubtaskProgress] = useState<Record<string, string[]>>({});
+  const [taskNotes, setTaskNotes] = useState<Record<string, string>>({});
   
   // Task modal states
   const [showTaskModal, setShowTaskModal] = useState(false);
@@ -88,6 +90,8 @@ export default function PhasesView({ projectId }: Props) {
     loadData();
     const savedSub = localStorage.getItem(`assessment-subtasks-${projectId}`);
     if (savedSub) setSubtaskProgress(JSON.parse(savedSub));
+    const savedNotes = localStorage.getItem(`task-notes-${projectId}`);
+    if (savedNotes) setTaskNotes(JSON.parse(savedNotes));
   }, [projectId]);
 
   const loadData = async () => {
@@ -146,6 +150,12 @@ export default function PhasesView({ projectId }: Props) {
     const updated = exists ? current.filter(s => s !== subtaskId) : [...current, subtaskId];
     const newMap = { ...subtaskProgress, [taskId]: updated };
     saveSubtaskProgress(newMap);
+  };
+
+  const updateTaskNote = (taskId: string, note: string) => {
+    const newNotes = { ...taskNotes, [taskId]: note };
+    setTaskNotes(newNotes);
+    localStorage.setItem(`task-notes-${projectId}`, JSON.stringify(newNotes));
   };
 
   const togglePhase = (phaseId: string) => {
@@ -360,12 +370,84 @@ export default function PhasesView({ projectId }: Props) {
     return { total, completed, inProgress, blocked };
   };
 
+  const getNextRecommendedTask = (): { phase: Phase; task: Task } | null => {
+    // Find the first phase that's not completed
+    for (const phase of phases) {
+      const phaseTasks = tasks[phase.id] || [];
+      if (phaseTasks.length === 0) continue;
+      
+      // Look for in-progress tasks first
+      const inProgressTask = phaseTasks.find(t => t.status === 'in-progress');
+      if (inProgressTask) return { phase, task: inProgressTask };
+      
+      // Then look for pending tasks (prioritize high/critical priority)
+      const pendingTasks = phaseTasks.filter(t => t.status === 'pending');
+      const criticalTask = pendingTasks.find(t => t.priority === 'critical');
+      if (criticalTask) return { phase, task: criticalTask };
+      
+      const highTask = pendingTasks.find(t => t.priority === 'high');
+      if (highTask) return { phase, task: highTask };
+      
+      // Any pending task
+      if (pendingTasks.length > 0) return { phase, task: pendingTasks[0] };
+    }
+    return null;
+  };
+
   if (loading) {
     return <div className="text-slate-600">Loading phases...</div>;
   }
 
+  const nextTask = getNextRecommendedTask();
+
   return (
     <div className="space-y-4">
+      {/* Next Recommended Task */}
+      {nextTask && (
+        <div className="bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-200 rounded-lg p-4">
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <div className="flex items-center space-x-2 mb-1">
+                <PlayCircle className="w-5 h-5 text-indigo-600" />
+                <h3 className="text-sm font-semibold text-indigo-900">Recommended Next Task</h3>
+              </div>
+              <p className="text-sm text-slate-700 mb-2">
+                <span className="font-medium">{nextTask.task.title}</span>
+                <span className="text-slate-500"> · {nextTask.phase.name}</span>
+              </p>
+              {nextTask.task.description && (
+                <p className="text-xs text-slate-600 mb-3">{nextTask.task.description}</p>
+              )}
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => {
+                    setExpandedPhases(new Set([nextTask.phase.id]));
+                    setActiveTaskId(nextTask.task.id);
+                    setTimeout(() => {
+                      document.getElementById(`task-${nextTask.task.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+                  }}
+                  className="px-3 py-1.5 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors"
+                >
+                  Start Task
+                </button>
+                {nextTask.task.status === 'pending' && (
+                  <button
+                    onClick={() => updateTaskStatus(nextTask.task.id, nextTask.phase.id, 'in-progress')}
+                    className="px-3 py-1.5 bg-white text-indigo-600 border border-indigo-200 text-sm rounded-lg hover:bg-indigo-50 transition-colors"
+                  >
+                    Mark In Progress
+                  </button>
+                )}
+              </div>
+            </div>
+            <span className={`px-2 py-1 text-xs font-medium rounded ${getPriorityColor(nextTask.task.priority)}`}>
+              {nextTask.task.priority}
+            </span>
+          </div>
+        </div>
+      )}
+
       {phases.map(phase => {
         const stats = getTaskStats(tasks[phase.id] || []);
         return (
@@ -394,16 +476,29 @@ export default function PhasesView({ projectId }: Props) {
                     </div>
                     <p className="text-sm text-slate-600">{phase.objective}</p>
                     {stats.total > 0 && (
-                      <div className="flex items-center space-x-4 mt-2 text-xs">
-                        <span className="text-slate-600">
-                          {stats.completed}/{stats.total} tasks completed
-                        </span>
-                        {stats.inProgress > 0 && (
-                          <span className="text-blue-600">{stats.inProgress} in progress</span>
-                        )}
-                        {stats.blocked > 0 && (
-                          <span className="text-red-600">{stats.blocked} blocked</span>
-                        )}
+                      <div className="mt-2 space-y-1">
+                        <div className="flex items-center justify-between text-xs">
+                          <div className="flex items-center space-x-4">
+                            <span className="text-slate-600">
+                              {stats.completed}/{stats.total} tasks completed
+                            </span>
+                            {stats.inProgress > 0 && (
+                              <span className="text-blue-600">{stats.inProgress} in progress</span>
+                            )}
+                            {stats.blocked > 0 && (
+                              <span className="text-red-600">{stats.blocked} blocked</span>
+                            )}
+                          </div>
+                          <span className="font-medium text-slate-700">
+                            {Math.round((stats.completed / stats.total) * 100)}%
+                          </span>
+                        </div>
+                        <div className="w-full bg-slate-200 rounded-full h-2">
+                          <div 
+                            className="bg-green-500 h-2 rounded-full transition-all duration-300"
+                            style={{ width: `${(stats.completed / stats.total) * 100}%` }}
+                          />
+                        </div>
                       </div>
                     )}
                   </div>
@@ -465,7 +560,7 @@ export default function PhasesView({ projectId }: Props) {
                         const isExpanded = activeTaskId === task.id;
                         
                         return (
-                        <div key={task.id} className="flex flex-col bg-white border border-slate-200 rounded-lg hover:border-slate-300 transition-colors">
+                        <div key={task.id} id={`task-${task.id}`} className="flex flex-col bg-white border border-slate-200 rounded-lg hover:border-slate-300 transition-colors">
                           <div className="flex items-center justify-between p-3">
                           <div className="flex items-center space-x-3 flex-1">
                             {getStatusIcon(task.status)}
@@ -482,6 +577,12 @@ export default function PhasesView({ projectId }: Props) {
                             </div>
                           </div>
                           <div className="flex items-center space-x-2">
+                            {staticTask?.estimatedMinutes && (
+                              <span className="px-2 py-1 text-xs text-slate-600 bg-slate-100 rounded flex items-center">
+                                <Clock className="w-3 h-3 mr-1" />
+                                {Math.round(staticTask.estimatedMinutes / 60)}h {staticTask.estimatedMinutes % 60}m
+                              </span>
+                            )}
                             <span className={`px-2 py-1 text-xs font-medium rounded ${getPriorityColor(task.priority)}`}>
                               {task.priority}
                             </span>
@@ -577,6 +678,58 @@ export default function PhasesView({ projectId }: Props) {
                                   </ul>
                                 </div>
                               )}
+
+                              {/* Templates */}
+                              {(task.id === 'prep-2' || task.id === 'prep-3' || staticTask?.id === 'prep-2' || staticTask?.id === 'prep-3' || task.title.includes('Interview') || task.title.includes('Scope')) && (
+                                <div>
+                                  <h6 className="text-sm font-medium text-slate-800 mb-1">📥 Downloadable Templates</h6>
+                                  <div className="flex flex-wrap gap-2">
+                                    {(task.id === 'prep-2' || staticTask?.id === 'prep-2' || task.title.includes('Scope')) && (
+                                      <a
+                                        href="/ZTA-Suite/templates/Assessment_Scope_Template.md"
+                                        download
+                                        className="inline-flex items-center px-3 py-1.5 text-xs bg-white border border-slate-300 text-slate-700 rounded hover:bg-slate-50 transition-colors"
+                                      >
+                                        <Download className="w-3 h-3 mr-1" />
+                                        Scope Template
+                                      </a>
+                                    )}
+                                    {(task.id === 'prep-3' || staticTask?.id === 'prep-3') && (
+                                      <a
+                                        href="/ZTA-Suite/templates/RACI_Matrix_Template.md"
+                                        download
+                                        className="inline-flex items-center px-3 py-1.5 text-xs bg-white border border-slate-300 text-slate-700 rounded hover:bg-slate-50 transition-colors"
+                                      >
+                                        <Download className="w-3 h-3 mr-1" />
+                                        RACI Matrix
+                                      </a>
+                                    )}
+                                    {task.title.includes('Interview') && (
+                                      <a
+                                        href="/ZTA-Suite/templates/Interview_Notes_Template.md"
+                                        download
+                                        className="inline-flex items-center px-3 py-1.5 text-xs bg-white border border-slate-300 text-slate-700 rounded hover:bg-slate-50 transition-colors"
+                                      >
+                                        <Download className="w-3 h-3 mr-1" />
+                                        Interview Notes
+                                      </a>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Task Notes */}
+                              <div>
+                                <h6 className="text-sm font-medium text-slate-800 mb-1">📝 Notes & Observations</h6>
+                                <textarea
+                                  value={taskNotes[task.id] || ''}
+                                  onChange={(e) => updateTaskNote(task.id, e.target.value)}
+                                  placeholder="Add notes, observations, decisions, or blockers..."
+                                  className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent resize-y"
+                                  rows={3}
+                                />
+                                <p className="text-xs text-slate-500 mt-1">💡 Notes are saved automatically</p>
+                              </div>
                             </div>
                           )}
                         </div>
