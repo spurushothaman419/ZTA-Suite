@@ -14,6 +14,7 @@ import RoadmapView from './RoadmapView';
 import AssessmentGuide from './AssessmentGuide';
 import FeatureGate from './FeatureGate';
 import NewProjectModal from './NewProjectModal';
+import ComplianceView from './ComplianceView';
 
 type Project = {
   id: string;
@@ -36,6 +37,7 @@ const tabs: TabConfig[] = [
   { id: 'guide', label: '📋 Assessment Guide' },
   { id: 'zta', label: 'ZTA Maturity', feature: 'full_assessment', featureName: 'Full Assessment' },
   { id: 'phases', label: 'Phases & Tasks' },
+  { id: 'compliance', label: 'Compliance' },
   { id: 'raid', label: 'RAID Log', feature: 'raid_log', featureName: 'RAID Log' },
   { id: 'stakeholders', label: 'Stakeholders', feature: 'stakeholders', featureName: 'Stakeholder Management' },
   { id: 'evidence', label: 'Evidence', feature: 'evidence_upload', featureName: 'Evidence Management' },
@@ -148,6 +150,8 @@ export default function Dashboard({ isDemo = false, onExitDemo }: DashboardProps
         return <EvidenceView projectId={selectedProject.id} />;
       case 'zta':
         return <ZTAMaturity projectId={selectedProject.id} projectName={selectedProject.name} clientName={selectedProject.client_name} />;
+      case 'compliance':
+        return <ComplianceView projectId={selectedProject.id} />;
       case 'status':
         return <WeeklyStatus projectId={selectedProject.id} />;
       case 'roadmap':
