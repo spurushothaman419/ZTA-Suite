@@ -37,7 +37,7 @@ const tabs: TabConfig[] = [
   { id: 'guide', label: '📋 Assessment Guide' },
   { id: 'zta', label: 'ZTA Maturity', feature: 'full_assessment', featureName: 'Full Assessment' },
   { id: 'phases', label: 'Phases & Tasks' },
-  { id: 'compliance', label: 'Compliance' },
+  { id: 'compliance', label: 'Compliance', feature: 'compliance', featureName: 'Compliance Mapping' },
   { id: 'raid', label: 'RAID Log', feature: 'raid_log', featureName: 'RAID Log' },
   { id: 'stakeholders', label: 'Stakeholders', feature: 'stakeholders', featureName: 'Stakeholder Management' },
   { id: 'evidence', label: 'Evidence', feature: 'evidence_upload', featureName: 'Evidence Management' },
