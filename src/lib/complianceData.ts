@@ -1,7 +1,8 @@
 // Compliance Framework Mapping Data
 // Maps IRS 1075, NIST 800-53 Rev 5, and CISA ZTMM controls
 
-export type ComplianceFramework = 'IRS1075' | 'NIST80053' | 'CISAZTMM';
+export type ComplianceFramework = 'IRS1075' | 'NIST80053' | 'CISAZTMM' | 'NIST800207' | 'NIST180035' | 'CUSTOM';
+export type ControlStatus = 'not-implemented' | 'partial' | 'implemented' | 'not-applicable';
 
 export interface ComplianceControl {
   id: string;
@@ -16,6 +17,16 @@ export interface ComplianceControl {
     framework: ComplianceFramework;
     controlId: string;
   }[];
+  isCustom?: boolean; // For organization-specific controls
+}
+
+export interface ControlStatusRecord {
+  controlId: string;
+  status: ControlStatus;
+  implementationNotes?: string;
+  evidenceIds?: string[]; // Link to evidence documents
+  lastUpdated?: string;
+  updatedBy?: string;
 }
 
 // IRS 1075 Controls (Tax Information Security)
@@ -543,8 +554,231 @@ export const cisaZTMMControls: ComplianceControl[] = [
   }
 ];
 
+// NIST 800-207 Zero Trust Architecture Principles
+export const nist800207Controls: ComplianceControl[] = [
+  {
+    id: 'nist207-1',
+    framework: 'NIST800207',
+    controlId: 'ZTA-1',
+    title: 'All Data Sources and Computing Services are Resources',
+    description: 'A network may be composed of multiple classes of devices, including IoT, mobile, and cloud services. All are considered resources.',
+    category: 'Core Principles',
+    ztmmPillars: ['Devices', 'Applications & Workloads', 'Data'],
+    implementationGuidance: 'Inventory and classify all data sources and computing services. Treat all resources equally regardless of network location.',
+    mappedControls: [
+      { framework: 'CISAZTMM', controlId: 'Devices-1' }
+    ]
+  },
+  {
+    id: 'nist207-2',
+    framework: 'NIST800207',
+    controlId: 'ZTA-2',
+    title: 'All Communication is Secured',
+    description: 'The network location alone does not imply trust. All communication must be secured regardless of network location.',
+    category: 'Core Principles',
+    ztmmPillars: ['Networks', 'Data'],
+    implementationGuidance: 'Encrypt all communications using TLS 1.3, mTLS, or IPsec. Implement end-to-end encryption for all data flows.',
+    mappedControls: [
+      { framework: 'NIST80053', controlId: 'SC-8' },
+      { framework: 'CISAZTMM', controlId: 'Networks-2' },
+      { framework: 'IRS1075', controlId: '9.3.5' }
+    ]
+  },
+  {
+    id: 'nist207-3',
+    framework: 'NIST800207',
+    controlId: 'ZTA-3',
+    title: 'Access to Resources is Granted Per-Session',
+    description: 'Trust in the requester is evaluated before granting access, and access is granted on a per-session basis.',
+    category: 'Core Principles',
+    ztmmPillars: ['Identity', 'Networks'],
+    implementationGuidance: 'Implement policy decision points (PDP) that evaluate trust per session. Use short-lived certificates or tokens.',
+    mappedControls: [
+      { framework: 'CISAZTMM', controlId: 'Identity-3' },
+      { framework: 'NIST80053', controlId: 'AC-3' }
+    ]
+  },
+  {
+    id: 'nist207-4',
+    framework: 'NIST800207',
+    controlId: 'ZTA-4',
+    title: 'Access Determined by Dynamic Policy',
+    description: 'Access to resources is determined by dynamic policy including observable state of user identity, application, and device.',
+    category: 'Core Principles',
+    ztmmPillars: ['Identity', 'Devices'],
+    implementationGuidance: 'Deploy policy engines that evaluate user, device, and environmental attributes. Implement risk-based adaptive access.',
+    mappedControls: [
+      { framework: 'CISAZTMM', controlId: 'Identity-2' },
+      { framework: 'CISAZTMM', controlId: 'Devices-2' }
+    ]
+  },
+  {
+    id: 'nist207-5',
+    framework: 'NIST800207',
+    controlId: 'ZTA-5',
+    title: 'Monitor and Measure Asset Security Posture',
+    description: 'The enterprise monitors and measures the integrity and security posture of all owned and associated assets.',
+    category: 'Core Principles',
+    ztmmPillars: ['Devices', 'Visibility & Analytics'],
+    implementationGuidance: 'Deploy continuous monitoring tools for device compliance, vulnerability management, and security posture assessment.',
+    mappedControls: [
+      { framework: 'NIST80053', controlId: 'SI-4' },
+      { framework: 'CISAZTMM', controlId: 'Visibility-1' }
+    ]
+  },
+  {
+    id: 'nist207-6',
+    framework: 'NIST800207',
+    controlId: 'ZTA-6',
+    title: 'Dynamic Authentication and Authorization',
+    description: 'All resource authentication and authorization are dynamic and strictly enforced before access is allowed.',
+    category: 'Core Principles',
+    ztmmPillars: ['Identity'],
+    implementationGuidance: 'Implement continuous authentication, step-up authentication for sensitive operations, and just-in-time access.',
+    mappedControls: [
+      { framework: 'NIST80053', controlId: 'IA-2' },
+      { framework: 'CISAZTMM', controlId: 'Identity-1' },
+      { framework: 'IRS1075', controlId: '9.3.2' }
+    ]
+  },
+  {
+    id: 'nist207-7',
+    framework: 'NIST800207',
+    controlId: 'ZTA-7',
+    title: 'Collect Information for Security Posture',
+    description: 'The enterprise collects as much information as possible about the current state of assets, network, and communications.',
+    category: 'Core Principles',
+    ztmmPillars: ['Visibility & Analytics'],
+    implementationGuidance: 'Deploy comprehensive logging, SIEM, and analytics platforms. Collect telemetry from all assets and data flows.',
+    mappedControls: [
+      { framework: 'NIST80053', controlId: 'AU-2' },
+      { framework: 'CISAZTMM', controlId: 'Visibility-1' },
+      { framework: 'IRS1075', controlId: '9.3.6' }
+    ]
+  }
+];
+
+// NIST 1800-35 Implementing Zero Trust Architecture (Practice Guide)
+export const nist180035Controls: ComplianceControl[] = [
+  {
+    id: 'nist1035-1',
+    framework: 'NIST180035',
+    controlId: 'IMP-1',
+    title: 'Identify Actors and Assets',
+    description: 'Identify all actors (users, devices, services) and assets (data, applications, services) in the environment.',
+    category: 'Implementation',
+    ztmmPillars: ['Identity', 'Devices', 'Data'],
+    implementationGuidance: 'Conduct comprehensive inventory of users, devices, applications, and data. Classify assets by sensitivity and criticality.',
+    mappedControls: [
+      { framework: 'CISAZTMM', controlId: 'Devices-1' },
+      { framework: 'NIST80053', controlId: 'AC-2' }
+    ]
+  },
+  {
+    id: 'nist1035-2',
+    framework: 'NIST180035',
+    controlId: 'IMP-2',
+    title: 'Identify Business Processes and Data Flows',
+    description: 'Map business processes and understand how data flows through the organization.',
+    category: 'Implementation',
+    ztmmPillars: ['Data', 'Applications & Workloads'],
+    implementationGuidance: 'Document business workflows, data flows, and application dependencies. Identify critical paths and sensitive data flows.',
+    mappedControls: [
+      { framework: 'CISAZTMM', controlId: 'Data-1' }
+    ]
+  },
+  {
+    id: 'nist1035-3',
+    framework: 'NIST180035',
+    controlId: 'IMP-3',
+    title: 'Define Policy and Access Requirements',
+    description: 'Create comprehensive access policies based on least privilege and need-to-know principles.',
+    category: 'Implementation',
+    ztmmPillars: ['Identity', 'Governance'],
+    implementationGuidance: 'Define RBAC/ABAC policies, document access requirements, and establish approval workflows.',
+    mappedControls: [
+      { framework: 'NIST80053', controlId: 'AC-6' },
+      { framework: 'CISAZTMM', controlId: 'Identity-3' },
+      { framework: 'IRS1075', controlId: '9.3.3' }
+    ]
+  },
+  {
+    id: 'nist1035-4',
+    framework: 'NIST180035',
+    controlId: 'IMP-4',
+    title: 'Deploy Policy Decision and Enforcement Points',
+    description: 'Implement PDP and PEP components to enforce zero trust policies.',
+    category: 'Implementation',
+    ztmmPillars: ['Identity', 'Networks'],
+    implementationGuidance: 'Deploy policy engines, identity brokers, and enforcement gateways. Integrate with existing identity and access systems.',
+    mappedControls: [
+      { framework: 'NIST800207', controlId: 'ZTA-3' },
+      { framework: 'CISAZTMM', controlId: 'Identity-3' }
+    ]
+  },
+  {
+    id: 'nist1035-5',
+    framework: 'NIST180035',
+    controlId: 'IMP-5',
+    title: 'Implement Continuous Monitoring and Analytics',
+    description: 'Deploy continuous monitoring, logging, and analytics capabilities across the environment.',
+    category: 'Implementation',
+    ztmmPillars: ['Visibility & Analytics'],
+    implementationGuidance: 'Implement SIEM, UBA/UEBA, and threat intelligence platforms. Establish baseline behavior and anomaly detection.',
+    mappedControls: [
+      { framework: 'NIST800207', controlId: 'ZTA-5' },
+      { framework: 'NIST80053', controlId: 'SI-4' },
+      { framework: 'CISAZTMM', controlId: 'Visibility-1' }
+    ]
+  },
+  {
+    id: 'nist1035-6',
+    framework: 'NIST180035',
+    controlId: 'IMP-6',
+    title: 'Automate Response to Security Events',
+    description: 'Implement automated response capabilities for security events and policy violations.',
+    category: 'Implementation',
+    ztmmPillars: ['Automation & Orchestration', 'Visibility & Analytics'],
+    implementationGuidance: 'Deploy SOAR platform with automated playbooks for common security events. Integrate with all security tools.',
+    mappedControls: [
+      { framework: 'NIST80053', controlId: 'IR-4' },
+      { framework: 'CISAZTMM', controlId: 'Visibility-2' }
+    ]
+  },
+  {
+    id: 'nist1035-7',
+    framework: 'NIST180035',
+    controlId: 'IMP-7',
+    title: 'Micro-Segmentation and Network Isolation',
+    description: 'Implement network micro-segmentation to limit lateral movement and contain breaches.',
+    category: 'Implementation',
+    ztmmPillars: ['Networks'],
+    implementationGuidance: 'Deploy software-defined networking (SDN) with micro-segmentation. Implement least-privilege network access controls.',
+    mappedControls: [
+      { framework: 'NIST800207', controlId: 'ZTA-2' },
+      { framework: 'NIST80053', controlId: 'SC-7' },
+      { framework: 'CISAZTMM', controlId: 'Networks-1' },
+      { framework: 'IRS1075', controlId: '9.3.7' }
+    ]
+  },
+  {
+    id: 'nist1035-8',
+    framework: 'NIST180035',
+    controlId: 'IMP-8',
+    title: 'Secure Remote Access with ZTNA',
+    description: 'Replace VPN with Zero Trust Network Access (ZTNA) for remote access.',
+    category: 'Implementation',
+    ztmmPillars: ['Networks', 'Identity'],
+    implementationGuidance: 'Deploy ZTNA solution with application-level access, device posture checking, and continuous authentication.',
+    mappedControls: [
+      { framework: 'CISAZTMM', controlId: 'Networks-1' },
+      { framework: 'CISAZTMM', controlId: 'Identity-2' }
+    ]
+  }
+];
+
 // Combined dataset for easy searching
-export const allControls = [...irs1075Controls, ...nist80053Controls, ...cisaZTMMControls];
+export const allControls = [...irs1075Controls, ...nist80053Controls, ...cisaZTMMControls, ...nist800207Controls, ...nist180035Controls];
 
 // Helper functions
 export const getControlsByFramework = (framework: ComplianceFramework): ComplianceControl[] => {
