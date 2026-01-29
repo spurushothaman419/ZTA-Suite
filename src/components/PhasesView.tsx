@@ -21,6 +21,7 @@ import {
   exportTaskInstructionsToPDF,
   exportTaskInstructionsToExcel,
 } from '../lib/exportUtils';
+import { deliverableDetails, type DeliverableDetail } from '../lib/deliverableTemplates';
 
 type Phase = {
   id: string;
@@ -667,15 +668,80 @@ export default function PhasesView({ projectId }: Props) {
                                 </div>
                               )}
 
-                              {/* Deliverables */}
+                              {/* Enhanced Deliverables */}
                               {staticTask.deliverables && staticTask.deliverables.length > 0 && (
                                 <div>
-                                  <h6 className="text-sm font-medium text-slate-800 mb-1">📄 Expected Deliverables</h6>
-                                  <ul className="space-y-1 text-sm text-slate-700">
-                                    {staticTask.deliverables.map((d, i) => (
-                                      <li key={i}>• {d}</li>
-                                    ))}
-                                  </ul>
+                                  <h6 className="text-sm font-medium text-slate-800 mb-2">📄 Expected Deliverables ({staticTask.deliverables.length})</h6>
+                                  <div className="space-y-3">
+                                    {staticTask.deliverables.map((d, i) => {
+                                      // Try to match deliverable to detailed template
+                                      const deliverableId = d.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                                      const matchingDetail = Object.values(deliverableDetails).find(
+                                        detail => 
+                                          detail.name.toLowerCase().includes(d.toLowerCase()) ||
+                                          d.toLowerCase().includes(detail.name.toLowerCase().split(' ')[0])
+                                      );
+
+                                      if (matchingDetail) {
+                                        return (
+                                          <div key={i} className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                            <div className="flex items-start justify-between mb-1">
+                                              <h6 className="text-sm font-semibold text-blue-900">{matchingDetail.name}</h6>
+                                              <span className="text-xs text-blue-700 bg-blue-100 px-2 py-0.5 rounded">{matchingDetail.estimatedTime}</span>
+                                            </div>
+                                            <p className="text-xs text-blue-800 mb-2">{matchingDetail.description}</p>
+                                            <div className="grid grid-cols-2 gap-2 text-xs mb-2">
+                                              <div>
+                                                <span className="font-medium text-blue-900">Format:</span>
+                                                <span className="text-blue-700 ml-1">{matchingDetail.format}</span>
+                                              </div>
+                                              <div>
+                                                <span className="font-medium text-blue-900">Purpose:</span>
+                                                <span className="text-blue-700 ml-1">{matchingDetail.purpose}</span>
+                                              </div>
+                                            </div>
+                                            {matchingDetail.exampleContent && matchingDetail.exampleContent.length > 0 && (
+                                              <details className="text-xs">
+                                                <summary className="cursor-pointer text-blue-900 font-medium mb-1">📝 Example Content</summary>
+                                                <ul className="space-y-0.5 text-blue-700 ml-4">
+                                                  {matchingDetail.exampleContent.slice(0, 3).map((ex, idx) => (
+                                                    <li key={idx}>• {ex}</li>
+                                                  ))}
+                                                </ul>
+                                              </details>
+                                            )}
+                                            {matchingDetail.tips && matchingDetail.tips.length > 0 && (
+                                              <details className="text-xs mt-1">
+                                                <summary className="cursor-pointer text-blue-900 font-medium mb-1">💡 Tips for Success</summary>
+                                                <ul className="space-y-0.5 text-blue-700 ml-4">
+                                                  {matchingDetail.tips.slice(0, 3).map((tip, idx) => (
+                                                    <li key={idx}>• {tip}</li>
+                                                  ))}
+                                                </ul>
+                                              </details>
+                                            )}
+                                            {matchingDetail.template && (
+                                              <a
+                                                href={matchingDetail.template}
+                                                download
+                                                className="inline-flex items-center mt-2 px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                                              >
+                                                <Download className="w-3 h-3 mr-1" />
+                                                Download Template
+                                              </a>
+                                            )}
+                                          </div>
+                                        );
+                                      } else {
+                                        // Fallback for deliverables without detailed templates
+                                        return (
+                                          <div key={i} className="bg-slate-50 border border-slate-200 rounded-lg p-2">
+                                            <p className="text-sm text-slate-700">• {d}</p>
+                                          </div>
+                                        );
+                                      }
+                                    })}
+                                  </div>
                                 </div>
                               )}
 
