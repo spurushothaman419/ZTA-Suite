@@ -459,8 +459,14 @@ export default function PhasesView({ projectId }: Props) {
                   </div>
                   {tasks[phase.id]?.length > 0 ? (
                     <div className="space-y-2">
-                      {tasks[phase.id].map(task => (
-                        <div key={task.id} className="flex items-center justify-between p-3 bg-white border border-slate-200 rounded-lg hover:border-slate-300 transition-colors">
+                      {tasks[phase.id].map(task => {
+                        const staticPhase = assessmentPhases.find(p => p.number === phase.phase_number);
+                        const staticTask = staticPhase?.tasks.find(st => st.title === task.title || st.id === task.id);
+                        const isExpanded = activeTaskId === task.id;
+                        
+                        return (
+                        <div key={task.id} className="flex flex-col bg-white border border-slate-200 rounded-lg hover:border-slate-300 transition-colors">
+                          <div className="flex items-center justify-between p-3">
                           <div className="flex items-center space-x-3 flex-1">
                             {getStatusIcon(task.status)}
                             <div className="flex-1">
@@ -490,6 +496,13 @@ export default function PhasesView({ projectId }: Props) {
                               <option value="blocked">Blocked</option>
                             </select>
                             <button
+                              onClick={() => setActiveTaskId(isExpanded ? null : task.id)}
+                              className="p-1 text-slate-400 hover:text-slate-600 transition-colors"
+                              title="Show details"
+                            >
+                              <Clock className="w-4 h-4" />
+                            </button>
+                            <button
                               onClick={() => openEditTaskModal(task)}
                               className="p-1 text-slate-400 hover:text-slate-600 transition-colors"
                               title="Edit task"
@@ -504,8 +517,71 @@ export default function PhasesView({ projectId }: Props) {
                               <Trash2 className="w-4 h-4" />
                             </button>
                           </div>
+                          </div>
+
+                          {/* Task Details Panel */}
+                          {isExpanded && staticTask && (
+                            <div className="p-3 border-t border-slate-100 bg-slate-50 space-y-3">
+                              {/* Steps */}
+                              {staticTask.steps && staticTask.steps.length > 0 && (
+                                <div>
+                                  <h6 className="text-sm font-medium text-slate-800 mb-1">📋 How to complete</h6>
+                                  <ol className="list-decimal list-inside text-sm text-slate-700 space-y-1">
+                                    {staticTask.steps.map((s, i) => (
+                                      <li key={i}>{s}</li>
+                                    ))}
+                                  </ol>
+                                </div>
+                              )}
+
+                              {/* Checklist/Subtasks */}
+                              {staticTask.subtasks && staticTask.subtasks.length > 0 && (
+                                <div>
+                                  <h6 className="text-sm font-medium text-slate-800 mb-1">✅ Checklist</h6>
+                                  <ul className="space-y-1">
+                                    {staticTask.subtasks.map(st => (
+                                      <li key={st.id} className="flex items-center">
+                                        <input
+                                          type="checkbox"
+                                          checked={(subtaskProgress[task.id] || []).includes(st.id)}
+                                          onChange={() => toggleSubtask(task.id, st.id)}
+                                          className="mr-2"
+                                        />
+                                        <span className="text-sm text-slate-700">{st.title}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+
+                              {/* Acceptance Criteria */}
+                              {staticTask.acceptanceCriteria && staticTask.acceptanceCriteria.length > 0 && (
+                                <div>
+                                  <h6 className="text-sm font-medium text-slate-800 mb-1">✓ Acceptance Criteria</h6>
+                                  <ul className="list-disc list-inside text-sm text-slate-700 space-y-1">
+                                    {staticTask.acceptanceCriteria.map((ac, i) => (
+                                      <li key={i}>{ac}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+
+                              {/* Deliverables */}
+                              {staticTask.deliverables && staticTask.deliverables.length > 0 && (
+                                <div>
+                                  <h6 className="text-sm font-medium text-slate-800 mb-1">📄 Expected Deliverables</h6>
+                                  <ul className="space-y-1 text-sm text-slate-700">
+                                    {staticTask.deliverables.map((d, i) => (
+                                      <li key={i}>• {d}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
-                      ))}
+                      );
+                      })}
                     </div>
                   ) : (
                     <div className="text-center py-8 bg-slate-50 rounded-lg border border-dashed border-slate-300">
