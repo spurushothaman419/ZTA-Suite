@@ -26,7 +26,8 @@ export type FeatureKey =
   | 'raid_log'
   | 'weekly_status'
   | 'all_pillars'
-  | 'advanced_analytics';
+  | 'advanced_analytics'
+  | 'compliance';
 
 // ============================================
 // ADMIN USERS - Full access to all features
@@ -54,6 +55,7 @@ const featureAccess: Record<AccessTier, FeatureKey[]> = {
     'multiple_projects',
     'roadmap',
     'all_pillars',
+    'compliance',
   ],
   enterprise: [
     'save_progress',
@@ -68,6 +70,7 @@ const featureAccess: Record<AccessTier, FeatureKey[]> = {
     'weekly_status',
     'all_pillars',
     'advanced_analytics',
+    'compliance',
   ],
 };
 
