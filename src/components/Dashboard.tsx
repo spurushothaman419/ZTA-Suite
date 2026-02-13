@@ -15,6 +15,7 @@ import AssessmentGuide from './AssessmentGuide';
 import FeatureGate from './FeatureGate';
 import NewProjectModal from './NewProjectModal';
 import ComplianceView from './ComplianceView';
+import MethodologyGuide from './MethodologyGuide';
 
 type Project = {
   id: string;
@@ -35,6 +36,7 @@ type TabConfig = {
 const tabs: TabConfig[] = [
   { id: 'overview', label: 'Overview' },
   { id: 'guide', label: '📋 Assessment Guide' },
+  { id: 'methodology', label: '🧮 Methodology' },
   { id: 'zta', label: 'ZTA Maturity', feature: 'full_assessment', featureName: 'Full Assessment' },
   { id: 'phases', label: 'Phases & Tasks' },
   { id: 'compliance', label: 'Compliance', feature: 'compliance', featureName: 'Compliance Mapping' },
@@ -140,6 +142,8 @@ export default function Dashboard({ isDemo = false, onExitDemo }: DashboardProps
         return <ProjectOverview project={selectedProject} />;
       case 'guide':
         return <AssessmentGuide projectId={selectedProject.id} />;
+      case 'methodology':
+        return <MethodologyGuide />;
       case 'phases':
         return <PhasesView projectId={selectedProject.id} />;
       case 'raid':
